@@ -171,6 +171,8 @@ main(int argc, char** argv)
 
     pthread_create(&clients[i], NULL, &client, (void*) &next_client);
   }
-
+  for(i = 0; i < client_num; i++){
+	  (void) pthread_join(clients[i], NULL);
+  }
   return 0;
 }
