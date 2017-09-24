@@ -22,6 +22,7 @@ sem_t barber2_ready;    // Mutex that tells when barber 2 is ready to serve the 
 sem_t barber3_ready;    // Mutex that tells when barber 3 is ready to serve the clients
 
 int seats = 10;         // Amount of seats in the barbershop
+char next_task [];
 
 void*
 shave()
@@ -30,11 +31,19 @@ shave()
   {
     sem_wait(&client_queue);
     sem_wait(&barbershop_seats);
+
+    if (next_task!='s'){
+      sem_wait(&client_queue);
+      sem_wait(&barbershop_seats);
+    }
+
     seats++;
     printf("Barber number 1 is shaving a customer's beard\n");
 
     sem_post(&barber1_ready);
     sem_post(&barbershop_seats); 
+
+
   }
 
   return NULL;
@@ -47,7 +56,14 @@ paint()
   {
     sem_wait(&client_queue);
     sem_wait(&barbershop_seats);
+
+    if (next_task!='p'){
+      sem_wait(&client_queue);
+      sem_wait(&barbershop_seats);
+    }
+
     seats++;
+
     printf("Barber number 2 is painting a customer's hair\n");
 
     sem_post(&barber2_ready);
@@ -65,6 +81,12 @@ haircut()
   {
     sem_wait(&client_queue);
     sem_wait(&barbershop_seats);
+
+    if (next_task!='h'){
+      sem_wait(&client_queue);
+      sem_wait(&barbershop_seats);
+    }
+
     seats++;
     printf("Barber number 3 is cutting a customer's hair\n");
 
@@ -168,6 +190,7 @@ main(int argc, char** argv)
     struct client_struct next_client;
     next_client.task = task;
     next_client.id = i;
+    next_task = task;
 
     pthread_create(&clients[i], NULL, &client, (void*) &next_client);
   }
