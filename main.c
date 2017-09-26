@@ -200,7 +200,7 @@ main(int argc, char** argv)
       exit(1);
     }
 
-   	printf("CLIENTE %d ENTRO NO SALAO\n", i);
+   	printf("Client %d entered the barber shop\n", i);
 
     struct client_struct next_client;
     next_client.task = task;
